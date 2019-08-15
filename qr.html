@@ -1,14 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh">
+<!DOCTYPE html>
+<html>
 <head>
-<title>二维码在线生成</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
-
-<script type="text/javascript" src="./js/jquery.min.js"></script>
-<script type="text/javascript" src="./js/qrcode.min.js"></script>
-<style>
-	body,html {
+    <title>二维码在线生成</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+    <script type="text/javascript" src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/qrcode.min.js"></script>
+    <style>
+        body,html {
 		font-family:"微软雅黑";
 		margin:0px;
 		padding: 0px; 
@@ -107,122 +106,110 @@
 
 </style>
 </head>
+
 <body>
-<div class="warp">
-	<div  class="titleBox">
-	<span class="titleSpan">二维码在线生成</span>
-	</div>
-	<div  class="inputBox">
-		<span class="inputSpan">&nbsp;</span>
+    <div class="warp">
+        <div class="titleBox">
+            <span class="titleSpan">二维码在线生成</span>
+        </div>
+        <div class="inputBox">
+            <span class="inputSpan">&nbsp;</span>
+            <input id='text' type="text" autocomplete="off" placeholder='输入要生成二维码的内容' />
+        </div>
+        <div class="qrBox">
+            <!-- 二维码标题 -->
+            <div class="qrTitle">
+                <span id="qrTitleSpan"><input class="qrTitleSpanInput" type="text" oninput="setFileName()" placeholder="请在此输入下载文件名称" ; /></span>
+            </div>
+            <!-- 图片 -->
+            <div id="qrcode" style="">
+            </div>
+            <!-- 描述 -->
+            <div class="qrDesc">
+                <span id="qrDescSpan"><input class="qrDescSpanInput" type="text" placeholder="输入描述" ; /></span>
+            </div>
+        </div>
+        <div class="btnBox">
+            <button class="btn createBtn">生成</button>
+            <button class="btn dowmloadBtn"><a href="#" onclick="isSupportDownload()" download="二维码下载.png">下载</a></button>
+        </div>
+    </div>
+    <script type="text/javascript">
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        width: 400,
+        height: 400
+    });
 
-		<input id='text'type="text" autocomplete="off" placeholder='输入要生成二维码的内容' />
-	</div>
-	<div class="qrBox">
-		<!-- 二维码标题 -->
-		<div class="qrTitle">
-			<span id="qrTitleSpan"><input class="qrTitleSpanInput" type="text" oninput="setFileName()" placeholder="请在此输入二维码标题";/></span>
-		</div>
-		<!-- 图片 -->
-		<div id="qrcode" style="">
-			
-		</div>
-		<!-- 描述 -->
-		<div class="qrDesc">
-			<span id="qrDescSpan"><input class="qrDescSpanInput" type="text" placeholder="输入描述"; /></span>
-		</div>
-	</div>
-	<div class="btnBox">
-		<button class="btn createBtn">生成</button>
-		<button class="btn dowmloadBtn"><a href="#" onclick="isSupportDownload()" download="二维码下载.png">下载</a></button>
-	</div>
+    function makeCode() {
+        var val = $('#text').val();
+        if (val) {
+            qrcode.makeCode(val);
+            downImg();
+        } else {
+            init();
+            downImg();
+        }
+    }
+    //初始化
+    init();
 
-</div>
-
-
-
-<script type="text/javascript">
-var qrcode = new QRCode(document.getElementById("qrcode"), {
-	width : 400,
-	height : 400
-});
-
-function makeCode () {		
-	var val=$('#text').val();
-	if(val){
-		qrcode.makeCode(val);
-		downImg();
-	}else{
-		init();
-		downImg();
-	}
-
-	
-}
-//初始化
-init();
-function init(){
-	var url =window.location.href;
-
-	
-	if (!url) {
-		alert('获取网址失败!');
-		return;
-	}
-	
-	qrcode.makeCode(url);
-}
+    function init() {
+        var url = window.location.href;
 
 
-$("#text").
-	on("blur", function () {
-		makeCode();
+        if (!url) {
+            alert('获取网址失败!');
+            return;
+        }
 
-	}).
-	on("keydown", function (e) {
-		if (e.keyCode == 13) {
-			makeCode();
-			
-
-		}
-	});
-
-	function downImg(){
-		var src =$('img').attr('src');
-		$('a').attr('href',src);
-	}
-
-	function setFileName(){
-		downImg();
-		var setFileName=$('.qrTitleSpanInput').val();
-		if(!setFileName){
-			setFileName='二维码'
-		};
-		setFileName+='.png';
-		$('a').attr('download',setFileName);
-	}
-
-	function isSupportDownload(){
-		var isSupportDownload = 'download' in document.createElement('a');
-		if (!isSupportDownload) {
-			alert('您的浏览器不支持点击下载,请右键二维码另存到本地.谢谢.');
-			return;
-		}
+        qrcode.makeCode(url);
+    }
 
 
-	}
-	$('a').on('mouseover',function(){
-		setFileName();
-		console.log(1);
-	});
+    $("#text").
+    on("blur", function() {
+        makeCode();
 
-	$(function(){
-		setFileName();
-	});
-</script>
+    }).
+    on("keydown", function(e) {
+        if (e.keyCode == 13) {
+            makeCode();
 
 
+        }
+    });
 
+    function downImg() {
+        var src = $('img').attr('src');
+        $('a').attr('href', src);
+    }
 
+    function setFileName() {
+        downImg();
+        var setFileName = $('.qrTitleSpanInput').val();
+        if (!setFileName) {
+            setFileName = '二维码'
+        };
+        setFileName += '.png';
+        $('a').attr('download', setFileName);
+    }
 
+    function isSupportDownload() {
+        var isSupportDownload = 'download' in document.createElement('a');
+        if (!isSupportDownload) {
+            alert('您的浏览器不支持点击下载,请右键二维码另存到本地.谢谢.');
+            return;
+        }
+    }
+    $('a').on('mouseover', function() {
+        setFileName();
+        console.log(1);
+    });
+
+    $(function() {
+        setFileName();
+    });
+    </script>
 </body>
+
 </html>
